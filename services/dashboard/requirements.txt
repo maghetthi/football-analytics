@@ -1,0 +1,5 @@
+# Used by Streamlit Community Cloud (app file: services/dashboard/app.py). Container builds use
+# pyproject.toml instead.
+httpx>=0.27
+matplotlib>=3.9
+streamlit>=1.40

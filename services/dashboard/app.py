@@ -1,5 +1,7 @@
 """Streamlit dashboard. Run: make dashboard  (needs the API running: make api)."""
 
+import os
+
 import pandas as pd
 import streamlit as st
 
@@ -7,6 +9,14 @@ from football_dashboard.client import ApiClient, ApiError
 from football_dashboard.pitch import shot_map
 
 st.set_page_config(page_title="Football Analytics", page_icon="⚽", layout="wide")
+
+# Streamlit Community Cloud keeps settings in st.secrets; locally they come from the environment.
+for _name in ("DASHBOARD_API_URL", "DASHBOARD_API_KEY"):
+    try:
+        if _name not in os.environ and _name in st.secrets:
+            os.environ[_name] = st.secrets[_name]
+    except Exception:  # no secrets file configured: environment variables only
+        pass
 
 api = ApiClient.from_env()
 

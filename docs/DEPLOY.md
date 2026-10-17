@@ -10,17 +10,29 @@ laptop:  StatsBomb -> raw -> dbt -> marts ──publish_marts.sh──► manage
                                       └─ make train ─► models/ (committed) ──baked into──► API image
 ```
 
-## Before choosing providers: verify current free plans
+## Free plans, verified 2026-10-17
 
-Free tiers change often. I could not load the providers' own pricing pages while writing this, so
-check these yourself before you rely on them:
+Read from each provider's own pages (and a live API key for API-Football). Re-check before you
+commit; these change.
 
-| Piece | What to confirm | Why it matters |
+| Piece | Verified facts | Fit for this project |
 |---|---|---|
-| Managed Postgres (Neon, Supabase) | storage cap, pgvector available, `CREATE ROLE` allowed, idle suspension | marts subset is ~15 MB; the full warehouse would not fit a 0.5 GB cap |
-| Redis (Upstash) | commands/month, TLS URL (`rediss://`) | cache fails open, so Redis is optional |
-| App host (Render, Fly.io, Railway) | free web service exists for new accounts, cold-start behaviour, RAM (API ~250 MB, dashboard ~300 MB) | the dashboard and API are separate services |
-| API-Football | **verified on a live key:** Free = 100 requests/day, 10/minute, seasons 2022-2024 only | no current-season data on the free plan; the adapter enforces the daily budget |
+| **Neon** (Postgres) | Free plan is permanent, no card. **1 GB** storage per project, 100 CU-hours, compute **suspends after 5 min idle** (cannot be disabled), pgvector included | Serving marts are ~15 MB. First query after idle pays a cold start. **Chosen** |
+| **Upstash** (Redis) | Free: 500K commands/month, 250 MB, 10 GB bandwidth | ~2 commands per cached request, so ~250K requests/month. Cache fails open anyway. **Chosen** |
+| **Render** web service | Free: 750 instance-hours/month per workspace, **spins down after 15 min idle, ~1 min cold start**; RAM/CPU not stated on the page | API idles at ~150 MiB (measured), so a small instance fits. **Chosen for the API** |
+| Render Postgres | Free DB **expires after 30 days** (14 days grace, then deleted) | Rejected |
+| Render Key Value | Free, but **not persisted** | Not needed (Upstash) |
+| Fly.io | **No free tier** for new organizations; 2 h / 7 day trial; ~$2.19 per 30 days for a 256 MB machine | Not free |
+| Railway | Trial: $5 one-time credit, expires in 30 days. Free plan: **$1 of credit per month**, 0.5 GB RAM per service | $1/month cannot keep a service running (my inference from the credit size) |
+| Streamlit Community Cloud | Documented as free, public or private GitHub repos; **limits and sleep behaviour not on the page I could read** | Dashboard host; check "Status and limitations" when you deploy |
+| API-Football | **Verified on your key:** Free = 100 requests/day, 10/minute, **seasons 2022-2024 only** | No current-season data; adapter enforces the daily budget |
+
+Why two hosts: Render gives 750 free hours for the whole workspace, which is one service running
+all month. The API and the dashboard would share it, so the dashboard goes to Streamlit Community
+Cloud (it reads `services/dashboard/requirements.txt`).
+
+Expect cold starts on the first visit (Render ~1 min, Neon a few seconds). Open the app before a
+demo or recording to warm it up.
 
 ## Steps
 
@@ -39,8 +51,9 @@ check these yourself before you rely on them:
    `POSTGRES_HOST`, `POSTGRES_DB`, `POSTGRES_SSLMODE=require`, `API_DB_USER=api_reader`,
    `API_DB_PASSWORD`, `API_KEYS` (comma-separated), `REDIS_URL`, optional `CACHE_TTL_SECONDS`.
    Health check: `GET /health`. Hosts that inject `PORT` are supported.
-5. **Deploy the dashboard** from `services/dashboard/Dockerfile` with
-   `DASHBOARD_API_URL=https://<api-host>` and `DASHBOARD_API_KEY=<one of API_KEYS>`.
+5. **Deploy the dashboard** on Streamlit Community Cloud (repo `maghetthi/football-analytics`, main
+   file `services/dashboard/app.py`). Add secrets `DASHBOARD_API_URL` and `DASHBOARD_API_KEY`
+   (one of the API's `API_KEYS`). Or use `services/dashboard/Dockerfile` on any container host.
 6. **Daily ingest (optional, needs an API-Football key):** add the secrets/variables listed in
    `.github/workflows/ingest-daily.yml` and set `INGEST_ENABLED=true`.
 
