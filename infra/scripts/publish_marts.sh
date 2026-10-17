@@ -10,7 +10,23 @@
 #   TARGET_DATABASE_URL='postgresql://user:pass@host/db?sslmode=require' infra/scripts/publish_marts.sh
 set -euo pipefail
 
-: "${TARGET_DATABASE_URL:?set TARGET_DATABASE_URL (it is read from the environment so it never lands in shell history or the repo)}"
+# Remote target: either a ready TARGET_DATABASE_URL, or built (and URL-escaped) from POSTGRES_*.
+# This must happen BEFORE sourcing .env, which holds the LOCAL warehouse settings.
+if [ -z "${TARGET_DATABASE_URL:-}" ]; then
+  : "${POSTGRES_HOST:?set POSTGRES_* (make neon-publish loads them from .env.neon)}"
+  TARGET_DATABASE_URL="$(python3 - <<'PY'
+import os
+from urllib.parse import quote
+e = os.environ
+print(
+    f"postgresql://{quote(e['POSTGRES_USER'], safe='')}:{quote(e['POSTGRES_PASSWORD'], safe='')}"
+    f"@{e['POSTGRES_HOST']}:{e.get('POSTGRES_PORT', '5432')}/{e['POSTGRES_DB']}"
+    f"?sslmode={e.get('POSTGRES_SSLMODE') or 'require'}"
+)
+PY
+)"
+  export TARGET_DATABASE_URL
+fi
 
 set -a; [ -f .env ] && . ./.env; set +a
 
