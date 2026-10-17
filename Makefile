@@ -2,7 +2,7 @@
 PY := .venv/bin/python
 COMPOSE := docker compose
 
-.PHONY: help ingest-statsbomb-all api dashboard train hooks venv up down logs reset-db psql migrate ingest-statsbomb dbt-deps dbt-build test lint fmt
+.PHONY: neon-check neon-migrate neon-publish help ingest-statsbomb-all api dashboard train hooks venv up down logs reset-db psql migrate ingest-statsbomb dbt-deps dbt-build test lint fmt
 
 help: ## Show targets
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-18s %s\n", $$1, $$2}'
@@ -58,6 +58,18 @@ train: ## Train and evaluate the match model (needs dbt-build); logs to MLflow
 
 dashboard: ## Run the Streamlit dashboard (needs make api)
 	set -a; [ -f .env ] && . ./.env; set +a; DASHBOARD_API_KEY=$${DASHBOARD_API_KEY:-$${API_KEYS%%,*}} .venv/bin/streamlit run services/dashboard/app.py
+
+# Remote database ("neon-*"): credentials live in .env.neon (gitignored), never on the command line.
+NEON := set -a; . ./.env.neon; set +a
+
+neon-check: ## Check the remote DB from .env.neon (no secrets printed)
+	$(NEON); $(PY) -m football_pipeline.check_db
+
+neon-migrate: ## Apply migrations to the remote DB from .env.neon
+	$(NEON); $(PY) -m alembic -c infra/alembic.ini upgrade head
+
+neon-publish: ## Copy the serving marts from the local warehouse to the remote DB
+	$(NEON); infra/scripts/publish_marts.sh
 
 test: ## Run tests
 	$(PY) -m pytest

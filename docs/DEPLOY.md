@@ -36,16 +36,17 @@ demo or recording to warm it up.
 
 ## Steps
 
-1. **Create the database** and copy its connection parameters.
-2. **Migrate it** (creates schemas, the `vector` extension and the read-only `api_reader` role):
+1. **Create the database** in Neon. In Connection Details turn pooling off (direct connection).
+2. **Store the connection locally**, never in chat or git:
    ```bash
-   POSTGRES_HOST=<host> POSTGRES_USER=<user> POSTGRES_PASSWORD=<pw> POSTGRES_DB=<db> \
-   POSTGRES_SSLMODE=require API_DB_PASSWORD=<new-strong-password> make migrate
+   cp .env.neon.example .env.neon   # then fill it in; .env.neon is gitignored
+   make neon-check                  # prints server, TLS, pgvector, role rights; no secrets
    ```
-3. **Publish the marts** from your local warehouse:
+3. **Migrate** (schemas, `vector` extension, read-only `api_reader`, request log) and **publish
+   the marts** from your local warehouse:
    ```bash
-   TARGET_DATABASE_URL='postgresql://<user>:<pw>@<host>/<db>?sslmode=require' \
-     infra/scripts/publish_marts.sh
+   make neon-migrate
+   make neon-publish
    ```
 4. **Deploy the API** from `services/api/Dockerfile` (build context = repo root). Environment:
    `POSTGRES_HOST`, `POSTGRES_DB`, `POSTGRES_SSLMODE=require`, `API_DB_USER=api_reader`,
