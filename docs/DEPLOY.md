@@ -48,14 +48,24 @@ demo or recording to warm it up.
    make neon-migrate
    make neon-publish
    ```
-4. **Deploy the API** from `services/api/Dockerfile` (build context = repo root). Environment:
-   `POSTGRES_HOST`, `POSTGRES_DB`, `POSTGRES_SSLMODE=require`, `API_DB_USER=api_reader`,
-   `API_DB_PASSWORD`, `API_KEYS` (comma-separated), `REDIS_URL`, optional `CACHE_TTL_SECONDS`.
-   Health check: `GET /health`. Hosts that inject `PORT` are supported.
-5. **Deploy the dashboard** on Streamlit Community Cloud (repo `maghetthi/football-analytics`, main
+4. **Redis (Upstash).** Create a free Redis database in the same AWS region as Neon (us-east-2) and
+   copy its TLS URL, `rediss://default:<token>@<host>:6379`.
+5. **Deploy the API on Render** with `render.yaml` (New > Blueprint > pick this repo). Render asks
+   for the three secrets:
+
+   | Variable | Value |
+   |---|---|
+   | `API_DB_PASSWORD` | the one in `.env.neon` (copy it with `grep ^API_DB_PASSWORD= .env.neon \| cut -d= -f2 \| pbcopy`) |
+   | `API_KEYS` | a NEW production key: `openssl rand -hex 24 \| pbcopy`. Do not reuse your local one |
+   | `REDIS_URL` | the Upstash `rediss://...` URL |
+
+   The rest (`POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_SSLMODE=require`,
+   `API_DB_USER=api_reader`, `CACHE_TTL_SECONDS`) is already in the blueprint. Health check:
+   `GET /health`. Render injects `PORT`, which the image honours.
+6. **Deploy the dashboard** on Streamlit Community Cloud (repo `maghetthi/football-analytics`, main
    file `services/dashboard/app.py`). Add secrets `DASHBOARD_API_URL` and `DASHBOARD_API_KEY`
    (one of the API's `API_KEYS`). Or use `services/dashboard/Dockerfile` on any container host.
-6. **Daily ingest (optional, needs an API-Football key):** add the secrets/variables listed in
+7. **Daily ingest (optional, needs an API-Football key):** add the secrets/variables listed in
    `.github/workflows/ingest-daily.yml` and set `INGEST_ENABLED=true`.
 
 ## Secrets checklist

@@ -1,0 +1,33 @@
+# Render Blueprint for the API (dashboard goes to Streamlit Community Cloud).
+# Secrets are NOT stored here: `sync: false` makes Render ask for them when you create the
+# Blueprint. If Render rejects this file, create the service by hand with the same values
+# (see docs/DEPLOY.md).
+services:
+  - type: web
+    name: football-analytics-api
+    runtime: docker
+    plan: free
+    region: ohio            # same region as the Neon database (us-east-2)
+    dockerfilePath: ./services/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: POSTGRES_HOST
+        value: ep-fragrant-truth-b5ih9gbw.c-7.us-east-2.aws.neon.tech
+      - key: POSTGRES_PORT
+        value: "5432"
+      - key: POSTGRES_DB
+        value: neondb
+      - key: POSTGRES_SSLMODE
+        value: require
+      - key: API_DB_USER
+        value: api_reader
+      - key: CACHE_TTL_SECONDS
+        value: "3600"
+      - key: API_DB_PASSWORD
+        sync: false
+      - key: API_KEYS
+        sync: false
+      - key: REDIS_URL
+        sync: false
