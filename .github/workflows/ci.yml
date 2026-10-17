@@ -21,9 +21,10 @@ jobs:
       - run: make venv
       - run: make lint
 
-  # Runs the real pipeline end to end: migrations, tests, ingestion, dbt build.
+  # Runs the real pipeline end to end: migrations, ingestion, dbt build, then all tests (the API
+  # and role tests need the built warehouse).
   pipeline:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     env:
       # Throwaway credentials for the ephemeral CI database; not secrets.
@@ -32,6 +33,7 @@ jobs:
       POSTGRES_DB: football_analytics
       POSTGRES_HOST: localhost
       POSTGRES_PORT: "5432"
+      API_DB_PASSWORD: ci-only-reader-password
     services:
       postgres:
         image: pgvector/pgvector:pg16
@@ -51,10 +53,10 @@ jobs:
       - uses: astral-sh/setup-uv@v10.3.0
       - run: make venv
       - run: make migrate
-      - name: Unit and integration tests
-        run: make test
       - name: Ingest StatsBomb (World Cup 2022)
         run: make ingest-statsbomb
       - run: make dbt-deps
       - name: dbt build (models + data tests)
         run: make dbt-build
+      - name: Tests (pipeline, API, read-only role)
+        run: make test

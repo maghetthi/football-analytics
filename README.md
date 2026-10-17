@@ -9,8 +9,10 @@ adds a predictive model. Full documentation will land with the final phase.
 cp .env.example .env      # then set POSTGRES_PASSWORD
 make venv                 # Python 3.12 venv via uv
 make up                   # Postgres (pgvector) + Redis
-make migrate              # create raw layer
+make migrate              # raw layer + read-only API role (needs API_DB_PASSWORD)
 make ingest-statsbomb     # World Cup 2022 into raw (idempotent)
+make dbt-deps && make dbt-build   # warehouse: staging + marts
+make api                  # http://localhost:8000/docs (send X-API-Key)
 make test
 ```
 
