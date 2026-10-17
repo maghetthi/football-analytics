@@ -17,6 +17,9 @@ class Settings(BaseSettings):
 
     statsbomb_ref: str = "master"
 
+    # Password for the read-only role created by migration 0002 (see infra/migrations).
+    api_db_password: SecretStr | None = None
+
     @property
     def database_url(self) -> URL:
         # URL.create escapes special characters in the password, unlike an f-string.
