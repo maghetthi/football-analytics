@@ -38,8 +38,9 @@ st.caption(
 )
 
 try:
-    teams = load_teams()
-    matches = load_matches()
+    with st.spinner("Waking up the API (free hosting can take up to a minute)..."):
+        teams = load_teams()
+        matches = load_matches()
 except ApiError as exc:
     st.error(str(exc))
     st.stop()

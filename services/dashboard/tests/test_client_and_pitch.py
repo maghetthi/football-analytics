@@ -52,3 +52,8 @@ def test_shot_map_renders_with_goals_and_missing_locations():
     ]
     fig = shot_map(shots, "test")
     assert len(fig.axes) == 1
+
+
+def test_default_timeout_tolerates_a_sleeping_free_host():
+    client = ApiClient("http://api", "k")
+    assert client._client.timeout.read >= 60

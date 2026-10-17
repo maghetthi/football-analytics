@@ -11,7 +11,8 @@ class ApiError(RuntimeError):
 
 class ApiClient:
     def __init__(self, base_url: str, api_key: str, client: httpx.Client | None = None) -> None:
-        self._client = client or httpx.Client(timeout=15)
+        # Free hosting sleeps when idle and needs ~1 minute to wake: be patient on the first call.
+        self._client = client or httpx.Client(timeout=httpx.Timeout(90.0, connect=30.0))
         self._base = base_url.rstrip("/")
         self._headers = {"X-API-Key": api_key}
 
