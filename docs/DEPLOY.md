@@ -20,7 +20,7 @@ check these yourself before you rely on them:
 | Managed Postgres (Neon, Supabase) | storage cap, pgvector available, `CREATE ROLE` allowed, idle suspension | marts subset is ~15 MB; the full warehouse would not fit a 0.5 GB cap |
 | Redis (Upstash) | commands/month, TLS URL (`rediss://`) | cache fails open, so Redis is optional |
 | App host (Render, Fly.io, Railway) | free web service exists for new accounts, cold-start behaviour, RAM (API ~250 MB, dashboard ~300 MB) | the dashboard and API are separate services |
-| API-Football | requests/day and which seasons the free plan allows | the adapter enforces a budget, but the plan limits decide what you can fetch |
+| API-Football | **verified on a live key:** Free = 100 requests/day, 10/minute, seasons 2022-2024 only | no current-season data on the free plan; the adapter enforces the daily budget |
 
 ## Steps
 

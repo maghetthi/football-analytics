@@ -121,8 +121,11 @@ models/             trained bundle served by the API (regenerate with `make trai
 
 ## Known limitations
 
-- API-Football is integrated up to raw storage (budgeted, tested with mocked HTTP). It has not run
-  against a live key yet, and there are no staging models for it until a real payload is seen.
+- API-Football is ingested and staged (`stg_api_football__fixtures`, verified on Premier League
+  2024/25: 380 fixtures in one request, final table matches the real standings). The **Free plan
+  only exposes seasons 2022-2024**, so there is no live data and a daily job just re-reads a static
+  season. Its teams are not mapped to StatsBomb teams (no entity-resolution table yet), so it does
+  not feed the marts or the model.
 - Raw versioning edge case: if a source file changes A -> B -> A, the hash of A already exists so
   the latest row stays B. A per-run observation log would fix it.
 - The model covers national teams in major tournaments only.
