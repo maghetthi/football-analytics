@@ -1,6 +1,6 @@
 from datetime import date
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Team(BaseModel):
@@ -105,3 +105,31 @@ class PlayerComparison(BaseModel):
     competition_key: str | None
     season_key: str | None
     players: list[PlayerStats]  # same order as the request: a, b
+
+
+class MatchPredictionRequest(BaseModel):
+    home_team_key: str = Field(pattern=r"^[0-9a-f]{32}$")
+    away_team_key: str = Field(pattern=r"^[0-9a-f]{32}$")
+
+
+class Probabilities(BaseModel):
+    home_win: float
+    draw: float
+    away_win: float
+
+
+class ModelInfo(BaseModel):
+    name: str
+    trained_at: str
+    data_cutoff: str
+    training_matches: int
+    walk_forward_log_loss: float
+
+
+class MatchPrediction(BaseModel):
+    home_team: str
+    away_team: str
+    probabilities: Probabilities
+    features: dict[str, float]
+    model: ModelInfo
+    disclaimer: str

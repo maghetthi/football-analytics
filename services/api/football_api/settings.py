@@ -20,6 +20,9 @@ class ApiSettings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     cache_ttl_seconds: int = 3600
 
+    # Directory holding the trained model bundle written by `make train`.
+    artifacts_dir: str = "artifacts"
+
     # Comma-separated. Empty means every request is rejected (secure by default).
     api_keys: SecretStr = SecretStr("")
 

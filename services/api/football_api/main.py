@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from football_api.routers import matches, players, teams
+from football_api.routers import matches, players, predictions, teams
 
 DESCRIPTION = """
 Football analytics served from a PostgreSQL warehouse (dbt marts).
@@ -14,6 +14,7 @@ app = FastAPI(title="Football Analytics API", version="0.1.0", description=DESCR
 app.include_router(teams.router)
 app.include_router(matches.router)
 app.include_router(players.router)
+app.include_router(predictions.router)
 
 
 @app.get("/health", tags=["meta"], summary="Liveness probe")
