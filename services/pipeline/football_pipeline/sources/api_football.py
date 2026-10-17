@@ -49,11 +49,21 @@ class ApiFootballAdapter:
         return str(resp.url), body
 
     def fetch(
-        self, *, league: int, season: int, date_from: str, date_to: str
+        self,
+        *,
+        league: int,
+        season: int,
+        date_from: str | None = None,
+        date_to: str | None = None,
     ) -> Iterator[RawRecord]:
-        """One request: all fixtures (with scores) of a league/season in a date window."""
-        params = {"league": league, "season": season, "from": date_from, "to": date_to}
+        """One request: all fixtures (with scores) of a league/season, optionally in a date window.
+
+        Without a window a whole season (e.g. 380 Premier League matches) still costs 1 request.
+        """
+        params: dict = {"league": league, "season": season}
+        key = f"{league}/{season}"
+        if date_from and date_to:
+            params |= {"from": date_from, "to": date_to}
+            key += f"/{date_from}_{date_to}"
         url, body = self._get("/fixtures", params)
-        yield RawRecord(
-            self.name, "fixtures", f"{league}/{season}/{date_from}_{date_to}", body, url
-        )
+        yield RawRecord(self.name, "fixtures", key, body, url)

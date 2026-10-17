@@ -27,7 +27,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.3.0
       - run: uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python ".[flows]"
-      - name: Ingest recent fixtures (1 request)
+      # Free plans only expose seasons 2022-2024, so this ingests a whole season (1 request).
+      - name: Ingest fixtures (1 request)
         run: >-
           .venv/bin/python -m football_pipeline.flows api-football
           --league "${{ vars.API_FOOTBALL_LEAGUE }}" --season "${{ vars.API_FOOTBALL_SEASON }}"

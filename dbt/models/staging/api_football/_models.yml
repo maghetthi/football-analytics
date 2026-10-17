@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: base_api_football__latest_payload
+    description: Newest raw version of each API-Football response (one row per resource + key).
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [resource, resource_key]
+
+  - name: stg_api_football__fixtures
+    description: >
+      One row per fixture. API-Football keys are NOT mapped to StatsBomb teams: the two sources
+      describe different competitions and no entity-resolution table exists yet.
+    columns:
+      - name: fixture_id
+        data_tests: [unique, not_null]
+      - name: league_id
+        data_tests: [not_null]
+      - name: season
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              # Free plans only expose 2022-2024; widen if the plan changes.
+              arguments: {min_value: 2022, max_value: 2024}
+      - name: kick_off_at
+        data_tests: [not_null]
+      - name: status_short
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [TBD, NS, 1H, HT, 2H, ET, BT, P, SUSP, INT, FT, AET, PEN, PST, CANC, ABD, AWD, WO, LIVE]
+      - name: home_team_id
+        data_tests: [not_null]
+      - name: away_team_id
+        data_tests: [not_null]
+      - name: home_goals
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0}

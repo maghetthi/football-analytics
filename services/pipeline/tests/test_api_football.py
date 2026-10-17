@@ -61,6 +61,19 @@ def test_fetch_yields_one_fixtures_record_and_sends_key(engine):
     }
 
 
+def test_whole_season_fetch_omits_the_date_window(engine):
+    seen = {}
+
+    def handler(request):
+        seen["params"] = dict(request.url.params)
+        return _ok(request)
+
+    adapter, _ = _adapter(engine, handler)
+    (rec,) = list(adapter.fetch(league=39, season=2024))
+    assert rec.resource_key == "39/2024"
+    assert seen["params"] == {"league": "39", "season": "2024"}
+
+
 def test_every_request_is_counted_and_quota_header_recorded(engine):
     adapter, budget = _adapter(engine, _ok)
     list(adapter.fetch(league=1, season=2023, date_from="a", date_to="b"))
