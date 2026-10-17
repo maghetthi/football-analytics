@@ -26,6 +26,9 @@ api = [
     "redis>=5",
     "uvicorn[standard]>=0.30",
 ]
+flows = [
+    "prefect>=3",
+]
 ml = [
     "joblib>=1.4",
     "matplotlib>=3.9",

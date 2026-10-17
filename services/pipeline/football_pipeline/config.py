@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     # Password for the read-only role created by migration 0002 (see infra/migrations).
     api_db_password: SecretStr | None = None
 
+    # API-Football (free plan ~100 requests/day: verify the current limit in your dashboard).
+    api_football_key: SecretStr | None = None
+    api_football_daily_budget: int = 90
+
     @property
     def database_url(self) -> URL:
         # URL.create escapes special characters in the password, unlike an f-string.

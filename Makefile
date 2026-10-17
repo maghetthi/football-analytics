@@ -9,7 +9,7 @@ help: ## Show targets
 
 venv: ## Create .venv (Python 3.12) and install deps
 	uv venv --python 3.12 .venv
-	uv pip install --python $(PY) -e ".[dev,dbt,api,ml,dashboard]"
+	uv pip install --python $(PY) -e ".[dev,dbt,api,ml,dashboard,flows]"
 
 hooks: ## Install git pre-commit and commit-msg hooks
 	.venv/bin/pre-commit install --hook-type pre-commit --hook-type commit-msg
