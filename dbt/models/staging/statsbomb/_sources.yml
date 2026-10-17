@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    description: Immutable landing layer written by the ingestion pipeline.
+    tables:
+      - name: source_payload
+        description: One row per (source, resource, key, content hash); never updated.
+        columns:
+          - name: id
+            data_tests: [unique, not_null]
+          - name: source
+            data_tests: [not_null]
+          - name: resource
+            data_tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: [competitions, matches, lineups, events]
+                  config:
+                    where: "source = 'statsbomb'"
+          - name: payload
+            data_tests: [not_null]

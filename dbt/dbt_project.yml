@@ -1,0 +1,21 @@
+name: football_analytics
+version: "0.1.0"
+config-version: 2
+profile: football_analytics
+
+model-paths: ["models"]
+test-paths: ["tests"]
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  football_analytics:
+    staging:
+      +schema: staging
+      # Views keep staging cheap and always-fresh for small, flat payloads.
+      +materialized: view
+      statsbomb:
+        # Events/shots expand ~40 MB of JSONB (200k+ rows); materialize once instead of per query.
+        stg_statsbomb__events:
+          +materialized: table
+        stg_statsbomb__shots:
+          +materialized: table

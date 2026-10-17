@@ -20,6 +20,10 @@ dev = [
     "pytest>=8",
     "ruff>=0.5",
 ]
+dbt = [
+    "dbt-core>=1.10",
+    "dbt-postgres>=1.9",
+]
 
 [tool.setuptools.packages.find]
 where = ["services/pipeline"]
