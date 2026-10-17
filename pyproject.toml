@@ -21,6 +21,11 @@ dev = [
     "pytest>=8",
     "ruff>=0.5",
 ]
+api = [
+    "fastapi>=0.115",
+    "redis>=5",
+    "uvicorn[standard]>=0.30",
+]
 dbt = [
     "dbt-core>=1.10",
     "dbt-postgres>=1.9",
@@ -30,7 +35,8 @@ dbt = [
 where = ["services/pipeline"]
 
 [tool.pytest.ini_options]
-testpaths = ["services/pipeline/tests"]
+testpaths = ["services/pipeline/tests", "services/api/tests"]
+pythonpath = ["services/api"]
 
 [tool.ruff]
 line-length = 100
@@ -41,4 +47,4 @@ extend-exclude = ["venv"]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["football_pipeline"]
+known-first-party = ["football_pipeline", "football_api"]

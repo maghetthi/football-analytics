@@ -2,14 +2,14 @@
 PY := .venv/bin/python
 COMPOSE := docker compose
 
-.PHONY: help hooks venv up down logs reset-db psql migrate ingest-statsbomb dbt-deps dbt-build test lint fmt
+.PHONY: help api hooks venv up down logs reset-db psql migrate ingest-statsbomb dbt-deps dbt-build test lint fmt
 
 help: ## Show targets
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-18s %s\n", $$1, $$2}'
 
 venv: ## Create .venv (Python 3.12) and install deps
 	uv venv --python 3.12 .venv
-	uv pip install --python $(PY) -e ".[dev,dbt]"
+	uv pip install --python $(PY) -e ".[dev,dbt,api]"
 
 hooks: ## Install git pre-commit and commit-msg hooks
 	.venv/bin/pre-commit install --hook-type pre-commit --hook-type commit-msg
@@ -44,6 +44,9 @@ dbt-deps: ## Install dbt packages
 
 dbt-build: ## Run dbt models + tests
 	$(DBT) build --project-dir dbt --profiles-dir dbt
+
+api: ## Run the API with reload (needs make up, migrate, dbt-build)
+	.venv/bin/uvicorn football_api.main:app --app-dir services/api --reload
 
 test: ## Run tests
 	$(PY) -m pytest
