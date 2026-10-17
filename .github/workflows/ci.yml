@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.0
+      - run: make venv
+      - run: make lint
+
+  # Runs the real pipeline end to end: migrations, tests, ingestion, dbt build.
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Throwaway credentials for the ephemeral CI database; not secrets.
+      POSTGRES_USER: ci
+      POSTGRES_PASSWORD: ci-only-password
+      POSTGRES_DB: football_analytics
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci-only-password
+          POSTGRES_DB: football_analytics
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d football_analytics"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.0
+      - run: make venv
+      - run: make migrate
+      - name: Unit and integration tests
+        run: make test
+      - name: Ingest StatsBomb (World Cup 2022)
+        run: make ingest-statsbomb
+      - run: make dbt-deps
+      - name: dbt build (models + data tests)
+        run: make dbt-build
