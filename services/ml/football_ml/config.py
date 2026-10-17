@@ -10,12 +10,14 @@ class MlSettings(BaseSettings):
 
     postgres_host: str = "localhost"
     postgres_port: int = 5432
+    # Managed databases (Neon, Supabase) require TLS: set POSTGRES_SSLMODE=require there.
+    postgres_sslmode: str | None = None
     postgres_db: str
     # Training only reads marts, so it uses the same SELECT-only role as the API.
     api_db_user: str = "api_reader"
     api_db_password: SecretStr
 
-    artifacts_dir: str = "artifacts"
+    artifacts_dir: str = "models"
     mlflow_tracking_uri: str = "sqlite:///mlflow.db"
 
     @property
@@ -27,6 +29,7 @@ class MlSettings(BaseSettings):
             host=self.postgres_host,
             port=self.postgres_port,
             database=self.postgres_db,
+            query={"sslmode": self.postgres_sslmode} if self.postgres_sslmode else {},
         )
 
 

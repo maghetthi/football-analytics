@@ -11,6 +11,8 @@ class ApiSettings(BaseSettings):
 
     postgres_host: str = "localhost"
     postgres_port: int = 5432
+    # Managed databases (Neon, Supabase) require TLS: set POSTGRES_SSLMODE=require there.
+    postgres_sslmode: str | None = None
     postgres_db: str
 
     # The API never uses the owner account: it connects as a SELECT-only role on `marts`.
@@ -21,7 +23,7 @@ class ApiSettings(BaseSettings):
     cache_ttl_seconds: int = 3600
 
     # Directory holding the trained model bundle written by `make train`.
-    artifacts_dir: str = "artifacts"
+    artifacts_dir: str = "models"
 
     # Comma-separated. Empty means every request is rejected (secure by default).
     api_keys: SecretStr = SecretStr("")
@@ -35,6 +37,7 @@ class ApiSettings(BaseSettings):
             host=self.postgres_host,
             port=self.postgres_port,
             database=self.postgres_db,
+            query={"sslmode": self.postgres_sslmode} if self.postgres_sslmode else {},
         )
 
     @property

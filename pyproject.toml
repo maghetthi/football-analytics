@@ -29,14 +29,20 @@ api = [
 flows = [
     "prefect>=3",
 ]
-ml = [
+# Just enough to load a trained model and predict (what the API image installs).
+ml-serve = [
     "joblib>=1.4",
-    "matplotlib>=3.9",
-    "mlflow>=3",
     "pandas>=2.2",
     "scikit-learn>=1.5",
 ]
+# Training and experiment tracking.
+ml = [
+    "football-analytics[ml-serve]",
+    "matplotlib>=3.9",
+    "mlflow>=3",
+]
 dashboard = [
+    "matplotlib>=3.9",
     "streamlit>=1.40",
 ]
 dbt = [

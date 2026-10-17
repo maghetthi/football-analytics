@@ -1,0 +1,610 @@
+[
+ {
+  "team_key": "00c0146dffd51465d7cc0a62258351e4",
+  "team_name": "Jamaica",
+  "elo": 1440.5914681285828,
+  "ppm": 0.0,
+  "xgd_pm": -1.0359413949333334,
+  "n": 3
+ },
+ {
+  "team_key": "040dc2efb1f7d491e08cc007842a3864",
+  "team_name": "Canada",
+  "elo": 1451.6646335817586,
+  "ppm": 1.2,
+  "xgd_pm": 0.14837762802000007,
+  "n": 5
+ },
+ {
+  "team_key": "04615af3f72d4ca2c5d06e33d183f8da",
+  "team_name": "Russia",
+  "elo": 1489.2911033246833,
+  "ppm": 1.0,
+  "xgd_pm": -0.5391502402999999,
+  "n": 5
+ },
+ {
+  "team_key": "0533cfbe3990c3ae4aabc69853511ff4",
+  "team_name": "Serbia",
+  "elo": 1446.239120358119,
+  "ppm": 0.6,
+  "xgd_pm": -0.5748176249400002,
+  "n": 5
+ },
+ {
+  "team_key": "06368755e7dec0edc0658b6d47d7aef5",
+  "team_name": "Morocco",
+  "elo": 1520.1584142839004,
+  "ppm": 1.4,
+  "xgd_pm": 1.00124498626,
+  "n": 5
+ },
+ {
+  "team_key": "08740423b217d5835e94dde93b0bee01",
+  "team_name": "Angola",
+  "elo": 1543.2348587082488,
+  "ppm": 2.0,
+  "xgd_pm": 0.30603924849999997,
+  "n": 5
+ },
+ {
+  "team_key": "0a6a4b384b2f75cf494dd2ac5dbfeb20",
+  "team_name": "Slovenia",
+  "elo": 1505.1053687404508,
+  "ppm": 1.0,
+  "xgd_pm": -0.512739669925,
+  "n": 4
+ },
+ {
+  "team_key": "0d36a03a80704b4cd3c5103aca06953a",
+  "team_name": "North Macedonia",
+  "elo": 1442.1655379304566,
+  "ppm": 0.0,
+  "xgd_pm": -1.4443333037,
+  "n": 3
+ },
+ {
+  "team_key": "11577c27494e4a6ba316bc59360b1457",
+  "team_name": "Chile",
+  "elo": 1486.4878574587904,
+  "ppm": 0.6666666666666666,
+  "xgd_pm": -0.8503559895,
+  "n": 3
+ },
+ {
+  "team_key": "153716ab8d43617147a1bcf014c7b52f",
+  "team_name": "Australia",
+  "elo": 1466.8821560617055,
+  "ppm": 1.2,
+  "xgd_pm": -0.7140668049800001,
+  "n": 5
+ },
+ {
+  "team_key": "21be28099d32045beb6a660e51909f65",
+  "team_name": "Japan",
+  "elo": 1503.7354396099968,
+  "ppm": 1.4,
+  "xgd_pm": -0.53079785446,
+  "n": 5
+ },
+ {
+  "team_key": "21d668b20bb10c1a7a26ee3d43f7be18",
+  "team_name": "Cape Verde Islands",
+  "elo": 1547.6757521209568,
+  "ppm": 2.2,
+  "xgd_pm": 0.28012583592,
+  "n": 5
+ },
+ {
+  "team_key": "25d3eead079c43739ec199d49af4c154",
+  "team_name": "Portugal",
+  "elo": 1541.38806681591,
+  "ppm": 1.6,
+  "xgd_pm": 1.00053116594,
+  "n": 5
+ },
+ {
+  "team_key": "2ac272281c7460889987024a706519ba",
+  "team_name": "Qatar",
+  "elo": 1438.7399984069245,
+  "ppm": 0.0,
+  "xgd_pm": -0.7876458316333332,
+  "n": 3
+ },
+ {
+  "team_key": "2c761a5c61e04a3d9e41af4e86a4fc51",
+  "team_name": "Egypt",
+  "elo": 1458.2661316728359,
+  "ppm": 0.8,
+  "xgd_pm": 0.3022853003800002,
+  "n": 5
+ },
+ {
+  "team_key": "35db058e206382d169bac9cb4a5ee3ac",
+  "team_name": "Mozambique",
+  "elo": 1472.4682099473016,
+  "ppm": 0.6666666666666666,
+  "xgd_pm": -0.5908572729333331,
+  "n": 3
+ },
+ {
+  "team_key": "3b7732f4aa6b3169cfa19a5df9e1f877",
+  "team_name": "Albania",
+  "elo": 1479.6525205715388,
+  "ppm": 0.3333333333333333,
+  "xgd_pm": -0.6921661236666665,
+  "n": 3
+ },
+ {
+  "team_key": "3bd70206530742a8bb2a34966f4e295e",
+  "team_name": "Finland",
+  "elo": 1485.405178365565,
+  "ppm": 1.0,
+  "xgd_pm": -0.9527616736666665,
+  "n": 3
+ },
+ {
+  "team_key": "4415f75eac8608ae84b8d3ee29fc3fcb",
+  "team_name": "Scotland",
+  "elo": 1422.899962734151,
+  "ppm": 0.4,
+  "xgd_pm": -0.5216743646000002,
+  "n": 5
+ },
+ {
+  "team_key": "44f8a31503f98f38c4af0147f1d0c351",
+  "team_name": "Mauritania",
+  "elo": 1474.0206795378883,
+  "ppm": 0.75,
+  "xgd_pm": -0.5515762206250001,
+  "n": 4
+ },
+ {
+  "team_key": "473d9ca2101b1f2c449331916affe101",
+  "team_name": "Iran",
+  "elo": 1487.4147436152195,
+  "ppm": 0.8,
+  "xgd_pm": -0.33159688339999993,
+  "n": 5
+ },
+ {
+  "team_key": "4c08c7a287f5e7f1faf7c362a0f854f5",
+  "team_name": "Senegal",
+  "elo": 1563.6770278667263,
+  "ppm": 2.0,
+  "xgd_pm": 0.4469190814600001,
+  "n": 5
+ },
+ {
+  "team_key": "4caf2ad9d9777bca56b6b1406e29d550",
+  "team_name": "Venezuela",
+  "elo": 1546.3978646144244,
+  "ppm": 2.5,
+  "xgd_pm": 0.055382725249999876,
+  "n": 4
+ },
+ {
+  "team_key": "4de954051d47541e5286d2b06944a8c1",
+  "team_name": "Equatorial Guinea",
+  "elo": 1530.0996253631338,
+  "ppm": 1.75,
+  "xgd_pm": -0.547536993125,
+  "n": 4
+ },
+ {
+  "team_key": "4ff153d544fdbe70c033838cc2d871fc",
+  "team_name": "Nigeria",
+  "elo": 1535.3399002297422,
+  "ppm": 2.0,
+  "xgd_pm": 0.1424454829,
+  "n": 5
+ },
+ {
+  "team_key": "53e760b94dbdcf846f9276245bad8bcb",
+  "team_name": "Ecuador",
+  "elo": 1516.4338712442386,
+  "ppm": 1.0,
+  "xgd_pm": -0.04519372310000005,
+  "n": 5
+ },
+ {
+  "team_key": "569028eada6cdfc21b5a0ef1ec287528",
+  "team_name": "Congo DR",
+  "elo": 1506.9753493903713,
+  "ppm": 1.2,
+  "xgd_pm": 0.5425130812799999,
+  "n": 5
+ },
+ {
+  "team_key": "57495200e200dfe1d5d7fd97f9acd673",
+  "team_name": "Algeria",
+  "elo": 1484.355205230868,
+  "ppm": 0.6666666666666666,
+  "xgd_pm": 0.03221291113333328,
+  "n": 3
+ },
+ {
+  "team_key": "586bfe8a365bc53cbaa5c37ecad870fc",
+  "team_name": "Iceland",
+  "elo": 1464.0685864669265,
+  "ppm": 0.3333333333333333,
+  "xgd_pm": 0.2167889971000001,
+  "n": 3
+ },
+ {
+  "team_key": "58c8c90cb886dc343d1a601cb172ab24",
+  "team_name": "Italy",
+  "elo": 1558.4404804213655,
+  "ppm": 1.0,
+  "xgd_pm": 0.1611666274600001,
+  "n": 5
+ },
+ {
+  "team_key": "5d0003c286eacd782354b5725adb3e0d",
+  "team_name": "Uruguay",
+  "elo": 1569.901607340076,
+  "ppm": 1.6,
+  "xgd_pm": 0.36718117024000013,
+  "n": 5
+ },
+ {
+  "team_key": "64663a0b3c1ab09039ff9dcdbf3a7fff",
+  "team_name": "Netherlands",
+  "elo": 1594.827260776193,
+  "ppm": 1.4,
+  "xgd_pm": 0.20854479109999993,
+  "n": 5
+ },
+ {
+  "team_key": "657fe668d853eae3d52fb6d895e184c0",
+  "team_name": "Mali",
+  "elo": 1515.3714354202143,
+  "ppm": 1.6,
+  "xgd_pm": 0.19567348595999992,
+  "n": 5
+ },
+ {
+  "team_key": "67b5e04e102197aa2acaea3803aa62a8",
+  "team_name": "Burkina Faso",
+  "elo": 1478.0079368391207,
+  "ppm": 1.0,
+  "xgd_pm": 0.19679465075000002,
+  "n": 4
+ },
+ {
+  "team_key": "6a27d17ef10286e642aa88c44a58bdc3",
+  "team_name": "Ukraine",
+  "elo": 1476.4154818615336,
+  "ppm": 1.4,
+  "xgd_pm": 0.007514350059999941,
+  "n": 5
+ },
+ {
+  "team_key": "6c162e7f672c520a87cefbce587147dd",
+  "team_name": "Gambia",
+  "elo": 1445.821475299701,
+  "ppm": 0.0,
+  "xgd_pm": -0.9890014673333333,
+  "n": 3
+ },
+ {
+  "team_key": "70bafc10d8c123d9cfa29914c8b4348f",
+  "team_name": "Costa Rica",
+  "elo": 1440.2157464518764,
+  "ppm": 1.4,
+  "xgd_pm": -1.8690027764,
+  "n": 5
+ },
+ {
+  "team_key": "74166750f4304562c584e225acbf33dd",
+  "team_name": "Tanzania",
+  "elo": 1476.5251203875312,
+  "ppm": 0.6666666666666666,
+  "xgd_pm": -1.0985556078333334,
+  "n": 3
+ },
+ {
+  "team_key": "7eaee9a18f70cda2fdd8ed6f8c7cbb9a",
+  "team_name": "Tunisia",
+  "elo": 1473.8875556750759,
+  "ppm": 1.0,
+  "xgd_pm": -0.008668410499999979,
+  "n": 5
+ },
+ {
+  "team_key": "89b1093deeb4410c48d4c9d72a648fce",
+  "team_name": "Argentina",
+  "elo": 1625.6881189152875,
+  "ppm": 2.6,
+  "xgd_pm": 1.04186841848,
+  "n": 5
+ },
+ {
+  "team_key": "8c02fac05f6fe592744e2092603eac7b",
+  "team_name": "Poland",
+  "elo": 1423.9125247000572,
+  "ppm": 0.2,
+  "xgd_pm": -0.78229789346,
+  "n": 5
+ },
+ {
+  "team_key": "8c081ca804096a84ec2a841eb8a2b2b5",
+  "team_name": "Spain",
+  "elo": 1671.7557493421696,
+  "ppm": 3.0,
+  "xgd_pm": 0.7282546767999999,
+  "n": 5
+ },
+ {
+  "team_key": "92f8228a26c4e69778bf1ea4e2870655",
+  "team_name": "C\u00f4te d'Ivoire",
+  "elo": 1532.3472126750028,
+  "ppm": 2.0,
+  "xgd_pm": 0.2957990475400001,
+  "n": 5
+ },
+ {
+  "team_key": "93e2cda3d7e0e5c0c785eb6225aaab53",
+  "team_name": "Ghana",
+  "elo": 1464.7379823657511,
+  "ppm": 1.0,
+  "xgd_pm": -0.43749646569999995,
+  "n": 5
+ },
+ {
+  "team_key": "98ccdca760ee12c9086e0d1b55e97db4",
+  "team_name": "Turkey",
+  "elo": 1464.9671527894802,
+  "ppm": 1.8,
+  "xgd_pm": -0.3262367868400002,
+  "n": 5
+ },
+ {
+  "team_key": "a40aba0a4d5de635102751b919ba73da",
+  "team_name": "Slovakia",
+  "elo": 1466.870227041328,
+  "ppm": 0.8,
+  "xgd_pm": -1.0941609575200002,
+  "n": 5
+ },
+ {
+  "team_key": "a75b9adac19a79686ea3d1b07a2d8a58",
+  "team_name": "Paraguay",
+  "elo": 1449.5694983585631,
+  "ppm": 0.0,
+  "xgd_pm": -0.5607766666999999,
+  "n": 3
+ },
+ {
+  "team_key": "aac9212073e1fc3654ef24f5f2a17ddb",
+  "team_name": "Namibia",
+  "elo": 1462.4763803942544,
+  "ppm": 1.0,
+  "xgd_pm": -0.41187631334999997,
+  "n": 4
+ },
+ {
+  "team_key": "abd27753f3974c6464cf575eee0be2eb",
+  "team_name": "Peru",
+  "elo": 1461.789690252066,
+  "ppm": 0.8,
+  "xgd_pm": -1.0298689703800001,
+  "n": 5
+ },
+ {
+  "team_key": "ad262fdf7f3fc5679012d06f0309eb71",
+  "team_name": "South Africa",
+  "elo": 1532.366368838562,
+  "ppm": 1.4,
+  "xgd_pm": -0.78173379246,
+  "n": 5
+ },
+ {
+  "team_key": "b518c3c677441c7fef87029b9a914dd3",
+  "team_name": "Guinea-Bissau",
+  "elo": 1443.3939884509175,
+  "ppm": 0.0,
+  "xgd_pm": -0.513238023,
+  "n": 3
+ },
+ {
+  "team_key": "bf2eb52fdaad6c9719833452da0a3281",
+  "team_name": "Croatia",
+  "elo": 1515.3538019039902,
+  "ppm": 1.0,
+  "xgd_pm": 0.06979982658000008,
+  "n": 5
+ },
+ {
+  "team_key": "c2f1d662589dfd68c18630dd39ad7df7",
+  "team_name": "England",
+  "elo": 1632.9785683257057,
+  "ppm": 1.6,
+  "xgd_pm": -0.055020810799999965,
+  "n": 5
+ },
+ {
+  "team_key": "c5e3c5b8474b6b503b0cd4746a3d3d80",
+  "team_name": "Mexico",
+  "elo": 1475.197267455737,
+  "ppm": 1.4,
+  "xgd_pm": 0.72691598072,
+  "n": 5
+ },
+ {
+  "team_key": "c7f1ef66752aa744f66c3fa42fd2b2ac",
+  "team_name": "Hungary",
+  "elo": 1454.0750940831554,
+  "ppm": 1.0,
+  "xgd_pm": -0.6016401229800001,
+  "n": 5
+ },
+ {
+  "team_key": "c875e4642b4141f0f5c5d64d4c2ed2cd",
+  "team_name": "Wales",
+  "elo": 1443.0479275696205,
+  "ppm": 0.2,
+  "xgd_pm": -1.1476407767399999,
+  "n": 5
+ },
+ {
+  "team_key": "cc3882a63ab2c345a67ce6f063a47431",
+  "team_name": "Saudi Arabia",
+  "elo": 1447.5437548238408,
+  "ppm": 1.2,
+  "xgd_pm": -0.6516383107199998,
+  "n": 5
+ },
+ {
+  "team_key": "cd15ee6c82929947ba6fbb0762d30f70",
+  "team_name": "Switzerland",
+  "elo": 1539.7588009983613,
+  "ppm": 1.8,
+  "xgd_pm": 0.13413322100000008,
+  "n": 5
+ },
+ {
+  "team_key": "ce34787af38d52087b8cda2b77a4ccd4",
+  "team_name": "Czech Republic",
+  "elo": 1485.866296815771,
+  "ppm": 0.8,
+  "xgd_pm": 0.1480681065799999,
+  "n": 5
+ },
+ {
+  "team_key": "d0510f5dc8d2d5522474c6bafd13469b",
+  "team_name": "Germany",
+  "elo": 1540.3426768659328,
+  "ppm": 2.0,
+  "xgd_pm": 0.9099012856800002,
+  "n": 5
+ },
+ {
+  "team_key": "d3e509dc2d249522ed4ab8ce97e5a5b4",
+  "team_name": "Guinea",
+  "elo": 1487.6214646963936,
+  "ppm": 1.4,
+  "xgd_pm": 0.14185802817999987,
+  "n": 5
+ },
+ {
+  "team_key": "d5aa3032eebdb3ef1d92250c7c466e31",
+  "team_name": "Brazil",
+  "elo": 1592.548155779407,
+  "ppm": 1.4,
+  "xgd_pm": 0.93455405642,
+  "n": 5
+ },
+ {
+  "team_key": "d612e8c0d35ecf173d046b709f777d88",
+  "team_name": "Belgium",
+  "elo": 1585.6992614711994,
+  "ppm": 1.0,
+  "xgd_pm": 0.4303526420199999,
+  "n": 5
+ },
+ {
+  "team_key": "daf33cf9d80c9921ee81d86850acb928",
+  "team_name": "Colombia",
+  "elo": 1583.3131437768839,
+  "ppm": 2.0,
+  "xgd_pm": 1.16232085866,
+  "n": 5
+ },
+ {
+  "team_key": "deddd1c9760b58d6af6d72f8a370a110",
+  "team_name": "Austria",
+  "elo": 1511.819417676213,
+  "ppm": 1.2,
+  "xgd_pm": -0.019784281300000116,
+  "n": 5
+ },
+ {
+  "team_key": "df723aee8fe90ef99216769e6f8b14b8",
+  "team_name": "Zambia",
+  "elo": 1485.296794245045,
+  "ppm": 0.6666666666666666,
+  "xgd_pm": -1.3868464830333334,
+  "n": 3
+ },
+ {
+  "team_key": "e13c86ff1c66233c030cbed406679c9e",
+  "team_name": "Bolivia",
+  "elo": 1430.4578389154753,
+  "ppm": 0.0,
+  "xgd_pm": -1.6907735916333333,
+  "n": 3
+ },
+ {
+  "team_key": "e14d143d9c6f2c08e1d7a823b4998da9",
+  "team_name": "Panama",
+  "elo": 1438.6177561472543,
+  "ppm": 1.2,
+  "xgd_pm": -0.8378066052400002,
+  "n": 5
+ },
+ {
+  "team_key": "e248054c4645ecb8efdb0939f1e71b4a",
+  "team_name": "Romania",
+  "elo": 1483.919890462889,
+  "ppm": 1.0,
+  "xgd_pm": -0.4758861805000001,
+  "n": 4
+ },
+ {
+  "team_key": "e49ed12af1666166defe7744bd74c6ad",
+  "team_name": "Sweden",
+  "elo": 1527.3224149172809,
+  "ppm": 1.4,
+  "xgd_pm": -0.21129512199999995,
+  "n": 5
+ },
+ {
+  "team_key": "eb39e202ffda90799dce9d5c6a17a40f",
+  "team_name": "Cameroon",
+  "elo": 1474.7391138451123,
+  "ppm": 1.4,
+  "xgd_pm": -0.7493755528799999,
+  "n": 5
+ },
+ {
+  "team_key": "ef27f49dbf63d3eeb950d3e1b15f5c55",
+  "team_name": "United States",
+  "elo": 1491.0893797672131,
+  "ppm": 1.2,
+  "xgd_pm": 0.41139577448000003,
+  "n": 5
+ },
+ {
+  "team_key": "f2041f70024cf5ca99ca04ddce80a021",
+  "team_name": "South Korea",
+  "elo": 1477.8113638425177,
+  "ppm": 1.4,
+  "xgd_pm": -0.6320303427199999,
+  "n": 5
+ },
+ {
+  "team_key": "f4db98476923602e31967046e0868e86",
+  "team_name": "Georgia",
+  "elo": 1484.531697441349,
+  "ppm": 1.0,
+  "xgd_pm": -1.543166880475,
+  "n": 4
+ },
+ {
+  "team_key": "f8bee55e53b1f6b2d83234262a10dd64",
+  "team_name": "France",
+  "elo": 1637.3587162870424,
+  "ppm": 1.2,
+  "xgd_pm": 0.4358493148199999,
+  "n": 5
+ },
+ {
+  "team_key": "fa143d6ae96288da7228d56c72e2872f",
+  "team_name": "Denmark",
+  "elo": 1493.5657749090667,
+  "ppm": 0.6,
+  "xgd_pm": -0.11062638273999995,
+  "n": 5
+ }
+]

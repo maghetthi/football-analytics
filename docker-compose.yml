@@ -29,5 +29,40 @@ services:
       retries: 10
     restart: unless-stopped
 
+  # Full stack in containers:  docker compose --profile app up --build
+  api:
+    profiles: ["app"]
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    container_name: football_api
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB}
+      API_DB_USER: ${API_DB_USER:-api_reader}
+      API_DB_PASSWORD: ${API_DB_PASSWORD}
+      API_KEYS: ${API_KEYS}
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+
+  dashboard:
+    profiles: ["app"]
+    build:
+      context: .
+      dockerfile: services/dashboard/Dockerfile
+    container_name: football_dashboard
+    environment:
+      DASHBOARD_API_URL: http://api:8000
+      DASHBOARD_API_KEY: ${API_KEYS}
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+
 volumes:
   postgres_data:

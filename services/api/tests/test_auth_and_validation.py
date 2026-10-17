@@ -43,3 +43,13 @@ def test_empty_configured_keys_reject_everything(client, no_db):
 )
 def test_invalid_input_is_422(client, no_db, auth, path):
     assert client.get(path, headers=auth).status_code == 422
+
+
+def test_database_url_adds_sslmode_only_when_configured():
+    from football_api.settings import ApiSettings
+
+    base = {"_env_file": None, "postgres_db": "d", "api_db_password": "p"}
+    assert "sslmode" not in str(ApiSettings(**base).database_url)
+    assert ApiSettings(**base, postgres_sslmode="require").database_url.query == {
+        "sslmode": "require"
+    }

@@ -60,3 +60,11 @@ jobs:
         run: make dbt-build
       - name: Tests (pipeline, API, read-only role)
         run: make test
+
+  # The images must build: this is what gets deployed.
+  docker:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker build -f services/api/Dockerfile -t football-api .
+      - run: docker build -f services/dashboard/Dockerfile -t football-dashboard .
