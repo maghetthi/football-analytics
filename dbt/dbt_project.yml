@@ -19,3 +19,6 @@ models:
           +materialized: table
         stg_statsbomb__shots:
           +materialized: table
+    marts:
+      +schema: marts
+      +materialized: table
