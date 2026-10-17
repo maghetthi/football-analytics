@@ -26,6 +26,16 @@ api = [
     "redis>=5",
     "uvicorn[standard]>=0.30",
 ]
+ml = [
+    "joblib>=1.4",
+    "matplotlib>=3.9",
+    "mlflow>=3",
+    "pandas>=2.2",
+    "scikit-learn>=1.5",
+]
+dashboard = [
+    "streamlit>=1.40",
+]
 dbt = [
     "dbt-core>=1.10",
     "dbt-postgres>=1.9",
@@ -35,8 +45,8 @@ dbt = [
 where = ["services/pipeline"]
 
 [tool.pytest.ini_options]
-testpaths = ["services/pipeline/tests", "services/api/tests"]
-pythonpath = ["services/api"]
+testpaths = ["services/pipeline/tests", "services/api/tests", "services/ml/tests"]
+pythonpath = ["services/api", "services/ml"]
 
 [tool.ruff]
 line-length = 100
@@ -47,4 +57,4 @@ extend-exclude = ["venv"]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["football_pipeline", "football_api"]
+known-first-party = ["football_pipeline", "football_api", "football_ml"]
