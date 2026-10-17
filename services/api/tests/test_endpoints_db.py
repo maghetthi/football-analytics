@@ -66,3 +66,34 @@ def test_match_shots_for_the_final(live_client, auth, argentina):
 
 def test_unknown_match_is_404(live_client, auth):
     assert live_client.get(f"/matches/{'f' * 32}/shots", headers=auth).status_code == 404
+
+
+def _player(live_client, auth, name):
+    found = live_client.get("/players", params={"q": name}, headers=auth).json()
+    if not found:
+        pytest.skip(f"{name} not in warehouse")
+    return found[0]["player_key"]
+
+
+def test_compare_players_returns_both_in_request_order(live_client, auth):
+    messi, mbappe = _player(live_client, auth, "Messi"), _player(live_client, auth, "Mbapp")
+    body = live_client.get(
+        "/players/compare", params={"a": messi, "b": mbappe}, headers=auth
+    ).json()
+    assert [p["player_key"] for p in body["players"]] == [messi, mbappe]
+    for p in body["players"]:
+        assert p["goals"] >= p["penalty_goals"] >= 0
+        assert p["np_xg"] <= p["xg"] + 1e-6
+        assert p["minutes_played"] > 0
+
+
+def test_compare_same_player_is_422(live_client, auth):
+    messi = _player(live_client, auth, "Messi")
+    resp = live_client.get("/players/compare", params={"a": messi, "b": messi}, headers=auth)
+    assert resp.status_code == 422
+
+
+def test_compare_unknown_player_is_404(live_client, auth):
+    messi = _player(live_client, auth, "Messi")
+    resp = live_client.get("/players/compare", params={"a": messi, "b": "0" * 32}, headers=auth)
+    assert resp.status_code == 404

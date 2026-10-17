@@ -77,3 +77,31 @@ class MatchShots(BaseModel):
     total_xg_home: float
     total_xg_away: float
     shots: list[Shot]
+
+
+class Player(BaseModel):
+    player_key: str
+    player_name: str
+    country_name: str | None
+
+
+class PlayerStats(BaseModel):
+    player_key: str
+    player_name: str
+    appearances: int
+    starts: int
+    minutes_played: float
+    shots: int
+    goals: int
+    penalty_goals: int
+    xg: float
+    np_xg: float
+    goals_per_90: float | None
+    np_xg_per_90: float | None
+    goals_minus_xg: float
+
+
+class PlayerComparison(BaseModel):
+    competition_key: str | None
+    season_key: str | None
+    players: list[PlayerStats]  # same order as the request: a, b
