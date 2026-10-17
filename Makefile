@@ -2,7 +2,7 @@
 PY := .venv/bin/python
 COMPOSE := docker compose
 
-.PHONY: help ingest-statsbomb-all api hooks venv up down logs reset-db psql migrate ingest-statsbomb dbt-deps dbt-build test lint fmt
+.PHONY: help ingest-statsbomb-all api dashboard train hooks venv up down logs reset-db psql migrate ingest-statsbomb dbt-deps dbt-build test lint fmt
 
 help: ## Show targets
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-18s %s\n", $$1, $$2}'
@@ -51,7 +51,13 @@ dbt-build: ## Run dbt models + tests
 	$(DBT) build --project-dir dbt --profiles-dir dbt
 
 api: ## Run the API with reload (needs make up, migrate, dbt-build)
-	.venv/bin/uvicorn football_api.main:app --app-dir services/api --reload
+	.venv/bin/uvicorn football_api.main:app --reload
+
+train: ## Train and evaluate the match model (needs dbt-build); logs to MLflow
+	$(PY) -m football_ml.train
+
+dashboard: ## Run the Streamlit dashboard (needs make api)
+	set -a; [ -f .env ] && . ./.env; set +a; DASHBOARD_API_KEY=$${DASHBOARD_API_KEY:-$${API_KEYS%%,*}} .venv/bin/streamlit run services/dashboard/app.py
 
 test: ## Run tests
 	$(PY) -m pytest

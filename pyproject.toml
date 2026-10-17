@@ -44,12 +44,25 @@ dbt = [
     "dbt-postgres>=1.9",
 ]
 
-[tool.setuptools.packages.find]
-where = ["services/pipeline"]
+# One installable distribution for the monorepo; each service keeps its own folder.
+[tool.setuptools]
+packages = [
+    "football_pipeline",
+    "football_pipeline.sources",
+    "football_api",
+    "football_api.routers",
+    "football_ml",
+    "football_dashboard",
+]
+
+[tool.setuptools.package-dir]
+football_pipeline = "services/pipeline/football_pipeline"
+football_api = "services/api/football_api"
+football_ml = "services/ml/football_ml"
+football_dashboard = "services/dashboard/football_dashboard"
 
 [tool.pytest.ini_options]
-testpaths = ["services/pipeline/tests", "services/api/tests", "services/ml/tests"]
-pythonpath = ["services/api", "services/ml"]
+testpaths = ["services/pipeline/tests", "services/api/tests", "services/ml/tests", "services/dashboard/tests"]
 
 [tool.ruff]
 line-length = 100
@@ -60,4 +73,4 @@ extend-exclude = ["venv"]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["football_pipeline", "football_api", "football_ml"]
+known-first-party = ["football_pipeline", "football_api", "football_ml", "football_dashboard"]
