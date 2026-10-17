@@ -1,0 +1,28 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: detect-private-key
+      - id: check-merge-conflict
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.1
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      # Mirrors .github/workflows/commit-policy.yml so a bad message is caught before pushing.
+      - id: no-ai-authorship
+        name: no AI authorship trailers
+        language: pygrep
+        entry: '(?i)co-authored-by:.*(claude|copilot|chatgpt|openai|anthropic|gemini|cursor|codeium|devin|tabnine)|generated with.*(claude|copilot|chatgpt)'
+        stages: [commit-msg]
+        always_run: true
