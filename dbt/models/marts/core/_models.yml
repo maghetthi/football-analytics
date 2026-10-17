@@ -144,3 +144,58 @@ models:
         data_tests:
           - dbt_utils.accepted_range:
               arguments: {min_value: 0, max_value: 3.1416}
+
+  - name: fact_lineup
+    description: One row per squad player per match, with minutes, starter flag and cards.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [match_key, team_key, player_key]
+    columns:
+      - name: match_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('fact_match'), field: match_key}
+      - name: team_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_team'), field: team_key}
+      - name: player_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_player'), field: player_key}
+      - name: date_key
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_date'), field: date_key}
+      - name: minutes_played
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 130}
+
+  - name: fact_event
+    description: One row per event (common fields). Shot details are in fact_shot.
+    columns:
+      - name: event_key
+        data_tests: [unique, not_null]
+      - name: match_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('fact_match'), field: match_key}
+      - name: team_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_team'), field: team_key}
+      - name: player_key
+        description: Null for events without a player (e.g. Half Start).
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_player'), field: player_key}
+      - name: event_type
+        data_tests: [not_null]

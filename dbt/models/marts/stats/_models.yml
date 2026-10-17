@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: mart_team_form
+    description: >
+      One row per team per match with the result plus rolling form over the 5 previous matches
+      (current match excluded, so safe as an ML feature).
+    columns:
+      - name: team_match_key
+        data_tests: [unique, not_null]
+      - name: match_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('fact_match'), field: match_key}
+      - name: team_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_team'), field: team_key}
+      - name: result
+        data_tests:
+          - accepted_values:
+              arguments: {values: [W, D, L]}
+      - name: points
+        data_tests:
+          - accepted_values:
+              arguments: {values: [0, 1, 3], quote: false}
+      - name: matches_in_window
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 5}
+      - name: points_last5
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 15}
+
+  - name: mart_player_season_stats
+    description: One row per player per competition per season, for rankings and comparisons.
+    columns:
+      - name: player_season_key
+        data_tests: [unique, not_null]
+      - name: player_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_player'), field: player_key}
+      - name: competition_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_competition'), field: competition_key}
+      - name: season_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_season'), field: season_key}
+      - name: goals
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0}
+      - name: starts
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0}
