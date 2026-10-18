@@ -57,3 +57,23 @@ def test_shot_map_renders_with_goals_and_missing_locations():
 def test_default_timeout_tolerates_a_sleeping_free_host():
     client = ApiClient("http://api", "k")
     assert client._client.timeout.read >= 60
+
+
+def test_fixture_endpoints_send_competition_and_limit():
+    seen = []
+
+    def handler(request):
+        seen.append((request.url.path, dict(request.url.params)))
+        return httpx.Response(
+            200, json=[] if "track" not in request.url.path else {"scored_matches": 0}
+        )
+
+    c = _client(handler)
+    c.upcoming_fixtures("UEL", 5)
+    c.recent_fixtures("UCL", 3)
+    c.track_record("UECL")
+    assert seen == [
+        ("/fixtures/upcoming", {"competition": "UEL", "limit": "5"}),
+        ("/fixtures/recent", {"competition": "UCL", "limit": "3"}),
+        ("/fixtures/track-record", {"competition": "UECL"}),
+    ]

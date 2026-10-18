@@ -70,3 +70,16 @@ class ApiClient:
             "/predictions/match",
             json={"home_team_key": home_team_key, "away_team_key": away_team_key},
         )
+
+    def upcoming_fixtures(self, competition: str = "UCL", limit: int = 30) -> list[dict]:
+        return self._request(
+            "GET", "/fixtures/upcoming", params={"competition": competition, "limit": limit}
+        )
+
+    def recent_fixtures(self, competition: str = "UCL", limit: int = 15) -> list[dict]:
+        return self._request(
+            "GET", "/fixtures/recent", params={"competition": competition, "limit": limit}
+        )
+
+    def track_record(self, competition: str = "UCL") -> dict:
+        return self._request("GET", "/fixtures/track-record", params={"competition": competition})

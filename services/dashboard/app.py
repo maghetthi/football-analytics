@@ -46,9 +46,85 @@ except ApiError as exc:
     st.stop()
 
 team_by_name = {t["team_name"]: t["team_key"] for t in teams}
-tab_form, tab_shots, tab_players, tab_pred = st.tabs(
-    ["Team form", "Match shots", "Player comparison", "Prediction"]
+tab_ucl, tab_form, tab_shots, tab_players, tab_pred = st.tabs(
+    ["UEFA fixtures", "Team form", "Match shots", "Player comparison", "Prediction"]
 )
+
+with tab_ucl:
+    names = {"UCL": "Champions League", "UEL": "Europa League", "UECL": "Conference League"}
+    comp = st.radio("Competition", list(names), format_func=names.get, horizontal=True)
+    st.caption(
+        "Fixtures and results: OpenLigaDB (ODbL). Probabilities come from a model built on results "
+        "only (Elo and recent form): a statistical estimate, not betting advice."
+    )
+    try:
+        fixtures = api.upcoming_fixtures(comp, 40)
+        record = api.track_record(comp)
+    except ApiError as exc:
+        st.warning(str(exc))
+        fixtures, record = [], None
+
+    if record:
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Predictions scored so far", record["scored_matches"])
+        c2.metric("Accuracy", "n/a" if record["accuracy"] is None else f"{record['accuracy']:.0%}")
+        c3.metric(
+            "Log-loss (uniform guess = 1.099)",
+            "n/a" if record["log_loss"] is None else record["log_loss"],
+        )
+        st.caption(record["note"])
+
+    st.subheader("Upcoming")
+    if not fixtures:
+        st.info("No scheduled matches found.")
+    else:
+        table = pd.DataFrame(
+            [
+                {
+                    "Kick-off (UTC)": pd.to_datetime(f["kick_off_at"]).strftime("%Y-%m-%d %H:%M"),
+                    "Stage": f["stage_name"],
+                    "Home": f["home_club"],
+                    "Away": f["away_club"],
+                    "Home win": (f["prediction"] or {}).get("home_win"),
+                    "Draw": (f["prediction"] or {}).get("draw"),
+                    "Away win": (f["prediction"] or {}).get("away_win"),
+                }
+                for f in fixtures
+            ]
+        )
+        pct = st.column_config.ProgressColumn(min_value=0.0, max_value=1.0, format="percent")
+        st.dataframe(
+            table,
+            hide_index=True,
+            use_container_width=True,
+            column_config={"Home win": pct, "Draw": pct, "Away win": pct},
+        )
+
+    st.subheader("Latest results")
+    try:
+        recent = api.recent_fixtures(comp, 15)
+    except ApiError as exc:
+        st.warning(str(exc))
+        recent = []
+    if recent:
+        st.dataframe(
+            pd.DataFrame(
+                [
+                    {
+                        "Date": pd.to_datetime(f["kick_off_at"]).strftime("%Y-%m-%d"),
+                        "Match": (
+                            f"{f['home_club']} {f['home_goals']}-{f['away_goals']} {f['away_club']}"
+                        ),
+                        "Model called it": {True: "yes", False: "no", None: "no prediction"}[
+                            f["predicted_correctly"]
+                        ],
+                    }
+                    for f in recent
+                ]
+            ),
+            hide_index=True,
+            use_container_width=True,
+        )
 
 with tab_form:
     col_a, col_b = st.columns([2, 1])
