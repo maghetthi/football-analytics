@@ -97,3 +97,56 @@ def test_compare_unknown_player_is_404(live_client, auth):
     messi = _player(live_client, auth, "Messi")
     resp = live_client.get("/players/compare", params={"a": messi, "b": "0" * 32}, headers=auth)
     assert resp.status_code == 404
+
+
+# --- UEFA club fixtures (OpenLigaDB) ---
+
+
+def _has_predictions(client, auth):
+    rows = client.get(
+        "/fixtures/upcoming", params={"limit": 100, "competition": "UCL"}, headers=auth
+    )
+    return [f for f in rows.json() if f["prediction"]] if rows.status_code == 200 else []
+
+
+def test_upcoming_fixtures_are_ordered_and_scored(live_client, auth):
+    scored = _has_predictions(live_client, auth)
+    if not scored:
+        pytest.skip(
+            "no scored upcoming UCL fixtures (run ingest-openligadb, dbt-build, predict-clubs)"
+        )
+    dates = [f["kick_off_at"] for f in scored]
+    assert dates == sorted(dates)
+    for f in scored:
+        p = f["prediction"]
+        assert p["home_win"] + p["draw"] + p["away_win"] == pytest.approx(1, abs=1e-3)
+        assert f["home_club"] != f["away_club"]
+        assert f["competition_code"] == "UCL"
+
+
+def test_upcoming_competition_filter(live_client, auth):
+    rows = live_client.get("/fixtures/upcoming", params={"competition": "UEL"}, headers=auth).json()
+    assert all(f["competition_code"] == "UEL" for f in rows)
+
+
+def test_recent_results_have_scores_and_only_prior_predictions(live_client, auth):
+    rows = live_client.get("/fixtures/recent", params={"limit": 20}, headers=auth).json()
+    if not rows:
+        pytest.skip("no finished UCL matches in the warehouse")
+    for f in rows:
+        assert f["result"] in {"home_win", "draw", "away_win"}
+        if f["prediction"] is not None:
+            # a prediction shown next to a result must have been made before kick-off
+            assert f["prediction"]["predicted_at"] < f["kick_off_at"]
+            assert isinstance(f["predicted_correctly"], bool)
+        else:
+            assert f["predicted_correctly"] is None
+
+
+def test_track_record_is_consistent(live_client, auth):
+    body = live_client.get("/fixtures/track-record", headers=auth).json()
+    if body["scored_matches"] == 0:
+        assert body["accuracy"] is None and body["log_loss"] is None
+    else:
+        assert 0 <= body["accuracy"] <= 1
+        assert body["log_loss"] > 0

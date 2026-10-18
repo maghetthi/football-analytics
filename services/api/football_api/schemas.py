@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from pydantic import BaseModel, Field
 
@@ -133,3 +133,37 @@ class MatchPrediction(BaseModel):
     features: dict[str, float]
     model: ModelInfo
     disclaimer: str
+
+
+class ClubProbabilities(BaseModel):
+    home_win: float
+    draw: float
+    away_win: float
+    model_name: str
+    predicted_at: datetime
+    elo_home: float
+    elo_away: float
+
+
+class Fixture(BaseModel):
+    match_key: str
+    competition_code: str
+    stage_name: str | None
+    kick_off_at: datetime
+    home_club: str
+    away_club: str
+    prediction: ClubProbabilities | None  # null until the daily job has scored the match
+
+
+class FinishedFixture(Fixture):
+    home_goals: int
+    away_goals: int
+    result: str
+    predicted_correctly: bool | None  # null if no prediction was made before kick-off
+
+
+class TrackRecord(BaseModel):
+    scored_matches: int  # finished matches that had a prediction made BEFORE kick-off
+    accuracy: float | None
+    log_loss: float | None
+    note: str

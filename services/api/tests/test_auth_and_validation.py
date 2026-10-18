@@ -53,3 +53,22 @@ def test_database_url_adds_sslmode_only_when_configured():
     assert ApiSettings(**base, postgres_sslmode="require").database_url.query == {
         "sslmode": "require"
     }
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/fixtures/upcoming?competition=XYZ",
+        "/fixtures/upcoming?limit=0",
+        "/fixtures/recent?limit=101",
+    ],
+)
+def test_fixtures_reject_bad_input(client, no_db, auth, path):
+    assert client.get(path, headers=auth).status_code == 422
+
+
+@pytest.mark.parametrize(
+    "path", ["/fixtures/upcoming", "/fixtures/recent", "/fixtures/track-record"]
+)
+def test_fixtures_require_api_key(client, no_db, path):
+    assert client.get(path).status_code == 401
