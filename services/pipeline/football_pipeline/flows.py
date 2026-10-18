@@ -3,6 +3,7 @@
 Run locally with an ephemeral Prefect engine (no server needed):
     python -m football_pipeline.flows statsbomb --competition 43 --season 106
     python -m football_pipeline.flows api-football --league 39 --season 2024
+    python -m football_pipeline.flows openligadb [--current-only]
 """
 
 import argparse
@@ -18,6 +19,11 @@ from football_pipeline.config import get_settings
 from football_pipeline.ingest_statsbomb import run as run_statsbomb
 from football_pipeline.raw import load_records
 from football_pipeline.sources.api_football import ApiFootballAdapter
+from football_pipeline.sources.openligadb import (
+    CURRENT_SEASON,
+    UEFA_CLUB_COMPETITIONS,
+    OpenLigaDbAdapter,
+)
 
 
 @task(retries=2, retry_delay_seconds=30)
@@ -52,6 +58,17 @@ def api_football_task(
     return inserted, skipped
 
 
+@task(retries=2, retry_delay_seconds=30, retry_condition_fn=_retry_only_transient)
+def openligadb_task(league: str, season: int) -> tuple[int, int]:
+    engine = create_engine(get_settings().database_url)
+    inserted = skipped = 0
+    for rec in OpenLigaDbAdapter().fetch(league=league, season=season):
+        with engine.begin() as conn:
+            i, s = load_records(conn, [rec])
+        inserted, skipped = inserted + i, skipped + s
+    return inserted, skipped
+
+
 @flow(name="statsbomb-ingest")
 def statsbomb_flow(competition_id: int, season_id: int) -> tuple[int, int]:
     inserted, skipped = statsbomb_task(competition_id, season_id)
@@ -72,6 +89,21 @@ def api_football_flow(league: int, season: int, days_back: int | None = None) ->
     return inserted, skipped
 
 
+@flow(name="openligadb-ingest")
+def openligadb_flow(current_only: bool = False) -> tuple[int, int]:
+    """Re-reads UEFA club competitions. `current_only` limits it to the live season (the daily job):
+    finished results and newly scheduled fixtures arrive as new raw versions, history is untouched.
+    """
+    total_new = total_same = 0
+    for league, season, _code in UEFA_CLUB_COMPETITIONS:
+        if current_only and season != CURRENT_SEASON:
+            continue
+        new, same = openligadb_task(league, season)
+        total_new, total_same = total_new + new, total_same + same
+    get_run_logger().info("openligadb: %d new versions, %d unchanged", total_new, total_same)
+    return total_new, total_same
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser()
@@ -85,9 +117,13 @@ def main() -> None:
     af.add_argument(
         "--days-back", type=int, default=None, help="trailing window; omit for the whole season"
     )
+    ol = sub.add_parser("openligadb")
+    ol.add_argument("--current-only", action="store_true")
     args = parser.parse_args()
 
-    if args.cmd == "statsbomb":
+    if args.cmd == "openligadb":
+        openligadb_flow(args.current_only)
+    elif args.cmd == "statsbomb":
         statsbomb_flow(args.competition, args.season)
     else:
         api_football_flow(args.league, args.season, args.days_back)

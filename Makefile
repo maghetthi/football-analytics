@@ -2,7 +2,7 @@
 PY := .venv/bin/python
 COMPOSE := docker compose
 
-.PHONY: neon-check neon-migrate neon-publish help ingest-statsbomb-all api dashboard train hooks venv up down logs reset-db psql migrate ingest-statsbomb dbt-deps dbt-build test lint fmt
+.PHONY: predict-clubs ingest-openligadb ingest-openligadb-current ingest-statsbomb-clubs neon-check neon-migrate neon-publish help ingest-statsbomb-all api dashboard train hooks venv up down logs reset-db psql migrate ingest-statsbomb dbt-deps dbt-build test lint fmt
 
 help: ## Show targets
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-18s %s\n", $$1, $$2}'
@@ -41,6 +41,17 @@ ingest-statsbomb-all: ## Ingest all modern men's international tournaments (~300
 		COMP=$${cs%%:*} SEASON=$${cs##*:} $(MAKE) --no-print-directory ingest-statsbomb || exit 1; \
 	done
 
+ingest-statsbomb-clubs: ## Ingest StatsBomb Premier League + La Liga (~1,300 matches, ~20 min, ~800 MB raw)
+	for cs in 2:44 2:27 11:278 11:37 11:38 11:39 11:40 11:41 11:21 11:22 11:23 11:24 11:25 11:26 11:27 11:2 11:1 11:4 11:42 11:90; do \
+		COMP=$${cs%%:*} SEASON=$${cs##*:} $(MAKE) --no-print-directory ingest-statsbomb || exit 1; \
+	done
+
+ingest-openligadb: ## Ingest UEFA club competitions (UCL/UEL/UECL) from OpenLigaDB, all seasons
+	$(PY) -m football_pipeline.flows openligadb
+
+ingest-openligadb-current: ## Re-read only the live season (what the daily job runs)
+	$(PY) -m football_pipeline.flows openligadb --current-only
+
 # Loads .env when present (local); in CI the variables come from the workflow env.
 DBT := set -a; [ -f .env ] && . ./.env; set +a; .venv/bin/dbt
 
@@ -55,6 +66,9 @@ api: ## Run the API with reload (needs make up, migrate, dbt-build)
 
 train: ## Train and evaluate the match model (needs dbt-build); logs to MLflow
 	$(PY) -m football_ml.train
+
+predict-clubs: ## Evaluate club models and write predictions for scheduled UEFA matches (DRY=1 to skip writing)
+	$(PY) -m football_ml.clubs $${DRY:+--dry-run}
 
 dashboard: ## Run the Streamlit dashboard (needs make api)
 	set -a; [ -f .env ] && . ./.env; set +a; DASHBOARD_API_KEY=$${DASHBOARD_API_KEY:-$${API_KEYS%%,*}} .venv/bin/streamlit run services/dashboard/app.py
