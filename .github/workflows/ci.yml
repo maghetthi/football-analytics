@@ -55,9 +55,13 @@ jobs:
       - run: make migrate
       - name: Ingest StatsBomb (World Cup 2022)
         run: make ingest-statsbomb
+      - name: Ingest OpenLigaDB (UEFA club competitions)
+        run: make ingest-openligadb
       - run: make dbt-deps
       - name: dbt build (models + data tests)
         run: make dbt-build
+      - name: Evaluate club models and write predictions
+        run: make predict-clubs
       - name: Tests (pipeline, API, read-only role)
         run: make test
 

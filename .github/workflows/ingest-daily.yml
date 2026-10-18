@@ -1,19 +1,26 @@
-name: Daily ingest
+name: Daily ingest and predictions
 
 # Inert until you opt in: set the repository variable INGEST_ENABLED=true and add the secrets below.
+# It refreshes UEFA club results from OpenLigaDB, rebuilds the club models in dbt and appends a new
+# set of predictions for the matches still to be played. StatsBomb tables are never touched
+# (dbt is limited to tag:openligadb), because production only holds the serving layer.
 on:
   schedule:
-    - cron: "17 6 * * *"   # 06:17 UTC, after the provider's daily quota reset
+    - cron: "17 6 * * *"   # 06:17 UTC
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: daily-ingest
+  cancel-in-progress: false
+
 jobs:
-  api-football:
+  openligadb:
     if: vars.INGEST_ENABLED == 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     env:
       POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
       POSTGRES_PORT: "5432"
@@ -21,14 +28,19 @@ jobs:
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
       POSTGRES_SSLMODE: require
-      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-      API_FOOTBALL_DAILY_BUDGET: "90"
+      API_DB_PASSWORD: ${{ secrets.API_DB_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.3.0
-      - run: uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python ".[flows]"
-      # Free plans only expose seasons 2022-2024, so this ingests a whole season (1 request).
-      - name: Ingest fixtures (1 request)
-        run: >-
-          .venv/bin/python -m football_pipeline.flows api-football
-          --league "${{ vars.API_FOOTBALL_LEAGUE }}" --season "${{ vars.API_FOOTBALL_SEASON }}"
+      - name: Install
+        run: |
+          uv venv --python 3.12 .venv
+          uv pip install --python .venv/bin/python -e ".[flows,dbt,ml]"
+      - name: Ingest OpenLigaDB (15 requests, idempotent)
+        run: .venv/bin/python -m football_pipeline.flows openligadb
+      - name: Build club models (dbt, only the openligadb tag)
+        run: |
+          .venv/bin/dbt deps --project-dir dbt --profiles-dir dbt
+          .venv/bin/dbt build --project-dir dbt --profiles-dir dbt --select tag:openligadb
+      - name: Predict scheduled matches
+        run: .venv/bin/python -m football_ml.clubs
