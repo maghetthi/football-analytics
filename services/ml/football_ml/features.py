@@ -19,6 +19,7 @@ join marts.dim_competition c using (competition_key)
 join marts.dim_season s using (season_key)
 join marts.mart_team_form hf on hf.match_key = m.match_key and hf.team_key = m.home_team_key
 join marts.mart_team_form af on af.match_key = m.match_key and af.team_key = m.away_team_key
+where c.is_international  -- club leagues have a real home advantage; this model assumes none
 order by m.match_date, m.match_key
 """
 
@@ -87,5 +88,6 @@ def current_team_state(engine: Engine, matches_with_features: pd.DataFrame) -> p
     agg = agg.reset_index()
     agg["ppm"] = agg.pts / agg.n
     agg["xgd_pm"] = (agg.xgf - agg.xga) / agg.n
-    agg["elo"] = agg.team_key.map(final).fillna(elo.INITIAL_RATING)
+    agg = agg[agg.team_key.isin(final)]  # only teams the international model has actually seen
+    agg["elo"] = agg.team_key.map(final)
     return agg[["team_key", "team_name", "elo", "ppm", "xgd_pm", "n"]]

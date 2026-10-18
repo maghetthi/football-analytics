@@ -17,6 +17,10 @@ class MlSettings(BaseSettings):
     api_db_user: str = "api_reader"
     api_db_password: SecretStr
 
+    # Only needed by jobs that WRITE predictions (the owner account); reading works with api_reader.
+    postgres_user: str | None = None
+    postgres_password: SecretStr | None = None
+
     artifacts_dir: str = "models"
     mlflow_tracking_uri: str = "sqlite:///mlflow.db"
 
@@ -26,6 +30,22 @@ class MlSettings(BaseSettings):
             "postgresql+psycopg",
             username=self.api_db_user,
             password=self.api_db_password.get_secret_value(),
+            host=self.postgres_host,
+            port=self.postgres_port,
+            database=self.postgres_db,
+            query={"sslmode": self.postgres_sslmode} if self.postgres_sslmode else {},
+        )
+
+    @property
+    def write_url(self) -> URL:
+        if self.postgres_user is None or self.postgres_password is None:
+            raise RuntimeError(
+                "POSTGRES_USER and POSTGRES_PASSWORD are required to write predictions"
+            )
+        return URL.create(
+            "postgresql+psycopg",
+            username=self.postgres_user,
+            password=self.postgres_password.get_secret_value(),
             host=self.postgres_host,
             port=self.postgres_port,
             database=self.postgres_db,

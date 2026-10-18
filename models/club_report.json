@@ -1,0 +1,43 @@
+{
+ "generated_at": "2026-10-18T00:36:05+00:00",
+ "best_model": "full_logistic",
+ "finished_matches": 1791,
+ "walk_forward": {
+  "baseline_prior": {
+   "log_loss": 1.0473,
+   "log_loss_ci_low": 1.0329,
+   "log_loss_ci_high": 1.0646,
+   "brier": 0.6323,
+   "accuracy": 0.474,
+   "ece": 0.0293,
+   "n_test": 1308.0
+  },
+  "elo_logistic": {
+   "log_loss": 0.9969,
+   "log_loss_ci_low": 0.9714,
+   "log_loss_ci_high": 1.0239,
+   "brier": 0.5923,
+   "accuracy": 0.5298,
+   "ece": 0.0135,
+   "n_test": 1308.0
+  },
+  "full_logistic": {
+   "log_loss": 0.9929,
+   "log_loss_ci_low": 0.9658,
+   "log_loss_ci_high": 1.0191,
+   "brier": 0.5894,
+   "accuracy": 0.5291,
+   "ece": 0.0108,
+   "n_test": 1308.0
+  },
+  "gradient_boosting": {
+   "log_loss": 1.02,
+   "log_loss_ci_low": 0.9922,
+   "log_loss_ci_high": 1.0502,
+   "brier": 0.6017,
+   "accuracy": 0.5168,
+   "ece": 0.0277,
+   "n_test": 1308.0
+  }
+ }
+}

@@ -55,6 +55,24 @@ class SymmetricModel:
         return out
 
 
+class PlainModel:
+    """Same interface as SymmetricModel, trained as-is: for fixtures with a real home advantage."""
+
+    def __init__(self, estimator: BaseEstimator, features: list[str]) -> None:
+        self.estimator = estimator
+        self.features = features
+
+    def fit(self, X: pd.DataFrame, y: np.ndarray) -> "PlainModel":
+        self.model_ = clone(self.estimator).fit(X[self.features], y)
+        return self
+
+    def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
+        raw = self.model_.predict_proba(X[self.features])
+        out = np.zeros((len(X), 3))
+        out[:, self.model_.classes_.astype(int)] = raw
+        return out
+
+
 def make_models() -> dict[str, SymmetricModel]:
     """Candidates, from trivial to flexible. The point is to show what each step buys."""
     logistic = lambda c: make_pipeline(  # noqa: E731

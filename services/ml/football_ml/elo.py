@@ -22,13 +22,19 @@ def goal_multiplier(goal_diff: int) -> float:
 
 
 def update(
-    rating_home: float, rating_away: float, home_goals: int, away_goals: int
+    rating_home: float,
+    rating_away: float,
+    home_goals: int,
+    away_goals: int,
+    home_advantage: float = 0.0,
 ) -> tuple[float, float]:
+    """`home_advantage` (rating points) makes a home win less surprising, so it moves ratings less.
+    Use ~60 for real home/away fixtures; 0 for tournaments where "home" is nominal."""
     actual = 1.0 if home_goals > away_goals else 0.5 if home_goals == away_goals else 0.0
     delta = (
         K_FACTOR
         * goal_multiplier(home_goals - away_goals)
-        * (actual - expected_score(rating_home, rating_away))
+        * (actual - expected_score(rating_home + home_advantage, rating_away))
     )
     return rating_home + delta, rating_away - delta
 

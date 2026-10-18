@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import log_loss
 
-from football_ml.model import SymmetricModel
+from football_ml.model import PlainModel, SymmetricModel
 
 
 def multiclass_brier(y: np.ndarray, p: np.ndarray) -> float:
@@ -49,7 +49,7 @@ def summarize(y: np.ndarray, p: np.ndarray) -> dict[str, float]:
 
 
 def walk_forward(
-    df: pd.DataFrame, model: SymmetricModel, min_train_tournaments: int = 2
+    df: pd.DataFrame, model: SymmetricModel | PlainModel, min_train_tournaments: int = 2
 ) -> tuple[np.ndarray, np.ndarray]:
     """Return pooled (y_true, probabilities) over every tournament after the first N."""
     order = df.groupby("tournament").match_date.min().sort_values().index.tolist()
@@ -57,7 +57,7 @@ def walk_forward(
     for i in range(min_train_tournaments, len(order)):
         train = df[df.tournament.isin(order[:i])]
         test = df[df.tournament == order[i]]
-        fitted = SymmetricModel(model.estimator, model.features).fit(train, train.label.to_numpy())
+        fitted = type(model)(model.estimator, model.features).fit(train, train.label.to_numpy())
         ps.append(fitted.predict_proba(test))
         ys.append(test.label.to_numpy())
     return np.concatenate(ys), np.vstack(ps)
