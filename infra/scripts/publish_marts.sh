@@ -31,7 +31,7 @@ fi
 set -a; [ -f .env ] && . ./.env; set +a
 
 TABLES=(dim_competition dim_season dim_team dim_player dim_date fact_match fact_shot fact_lineup
-        mart_team_form mart_player_season_stats)
+        mart_team_form mart_player_season_stats dim_club fact_club_match club_match_predictions)
 ARGS=()
 for t in "${TABLES[@]}"; do ARGS+=(-t "marts.$t"); done
 

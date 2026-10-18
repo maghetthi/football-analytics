@@ -11,6 +11,8 @@ models:
   football_analytics:
     staging:
       +schema: staging
+      openligadb:
+        +tags: [openligadb]
       # Views keep staging cheap and always-fresh for small, flat payloads.
       +materialized: view
       statsbomb:
@@ -22,3 +24,10 @@ models:
     marts:
       +schema: marts
       +materialized: table
+      clubs:
+        +tags: [openligadb]
+
+seeds:
+  football_analytics:
+    +schema: staging
+    +tags: [openligadb]

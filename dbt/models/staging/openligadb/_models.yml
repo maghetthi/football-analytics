@@ -1,0 +1,39 @@
+version: 2
+
+seeds:
+  - name: openligadb_competitions
+    description: Vetted OpenLigaDB league entries and the competition each one represents.
+    columns:
+      - name: league_shortcut
+        data_tests: [not_null]
+      - name: competition_code
+        data_tests:
+          - accepted_values:
+              arguments: {values: [UCL, UEL, UECL]}
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [league_shortcut, season]
+
+models:
+  - name: base_openligadb__latest_payload
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [resource, resource_key]
+
+  - name: stg_openligadb__matches
+    description: >
+      One row per match from community-maintained OpenLigaDB. Team ids are NOT reliable across
+      seasons (one club can appear under several ids), so marts identify clubs by name.
+    columns:
+      - name: match_id
+        data_tests: [unique, not_null]
+      - name: kick_off_at
+        data_tests: [not_null]
+      - name: home_team_name
+        data_tests: [not_null]
+      - name: away_team_name
+        data_tests: [not_null]
+      - name: is_finished
+        data_tests: [not_null]
